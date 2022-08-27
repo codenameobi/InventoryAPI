@@ -1,4 +1,5 @@
-﻿using InventoryAPI.Data;
+﻿using InventoryAPI.Configurations;
+using InventoryAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,9 @@ builder.Services.AddDbContext<InventoryDbContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(); 
+
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", policy => policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());

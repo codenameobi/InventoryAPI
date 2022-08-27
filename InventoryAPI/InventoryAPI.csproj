@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,8 @@
     <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
     <None Remove="DTOs\" />
     <None Remove="DTOs\Event\" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="Configurations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -46,5 +49,6 @@
     <Folder Include="Data\Configuration\" />
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\Event\" />
+    <Folder Include="Configurations\" />
   </ItemGroup>
 </Project>

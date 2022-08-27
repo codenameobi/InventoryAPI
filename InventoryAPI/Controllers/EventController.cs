@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.DTOs.Event;
+using AutoMapper;
 
 namespace InventoryAPI.Controllers
 {
@@ -16,10 +17,12 @@ namespace InventoryAPI.Controllers
     public class EventController : ControllerBase
     {
         private readonly InventoryDbContext _context;
+        private readonly IMapper _mapper;
 
-        public EventController(InventoryDbContext context)
+        public EventController(InventoryDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Event
@@ -30,17 +33,8 @@ namespace InventoryAPI.Controllers
           {
               return NotFound();
           }
-            var data = new List<EventDto>();
             var events = await _context.Events.ToListAsync();
-            foreach (var item in events  )
-            {
-                data.Add(new EventDto
-                {
-                    Title = item.Title,
-                    Description = item.Description,
-                    Id = item.Id
-                });
-            }
+            var data = _mapper.Map<List<EventDto>>(events);
             return data;
         }
 
@@ -65,7 +59,7 @@ namespace InventoryAPI.Controllers
         // PUT: api/Event/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event @event)
+        public async Task<IActionResult> PutEvent(int id, EventDto @event)
         {
             if (id != @event.Id)
             {
@@ -102,11 +96,7 @@ namespace InventoryAPI.Controllers
           {
               return Problem("Entity set 'InventoryDbContext.Events'  is null.");
           }
-            var newEvent = new Event()
-            {
-                Title = eventDto.Title,
-                Description = eventDto.Description
-            };
+            var newEvent = _mapper.Map<Event>(eventDto);
             _context.Events.Add(newEvent);
             await _context.SaveChangesAsync();
 
