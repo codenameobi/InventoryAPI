@@ -3,6 +3,7 @@ using InventoryAPI.Data.Configuration;
 using InventoryAPI.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace InventoryAPI.Data
 {
@@ -22,6 +23,27 @@ namespace InventoryAPI.Data
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+    }
+
+    public class InventoryDbContextFactory : IDesignTimeDbContextFactory<InventoryDbContext>
+    {
+        public InventoryDbContext CreateDbContext(string[] args)
+        {
+            // Get environment
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            // Build config
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            // Get connection string
+            var optionsBuilder = new DbContextOptionsBuilder<InventoryDbContext>();
+            var connectionString = config.GetConnectionString("ManagementToolDbConnection");
+            optionsBuilder.UseSqlServer(connectionString);
+            return new InventoryDbContext(optionsBuilder.Options);
+        }
     }
 }
 
