@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InventoryAPI.Data;
 using InventoryAPI.Models;
+using InventoryAPI.DTOs.Event;
 
 namespace InventoryAPI.Controllers
 {
@@ -23,13 +24,24 @@ namespace InventoryAPI.Controllers
 
         // GET: api/Event
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents()
         {
           if (_context.Events == null)
           {
               return NotFound();
           }
-            return await _context.Events.ToListAsync();
+            var data = new List<EventDto>();
+            var events = await _context.Events.ToListAsync();
+            foreach (var item in events  )
+            {
+                data.Add(new EventDto
+                {
+                    Title = item.Title,
+                    Description = item.Description,
+                    Id = item.Id
+                });
+            }
+            return data;
         }
 
         // GET: api/Event/5
@@ -84,16 +96,21 @@ namespace InventoryAPI.Controllers
         // POST: api/Event
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent(Event @event)
+        public async Task<ActionResult<Event>> PostEvent(CreateEventDto eventDto)
         {
           if (_context.Events == null)
           {
               return Problem("Entity set 'InventoryDbContext.Events'  is null.");
           }
-            _context.Events.Add(@event);
+            var newEvent = new Event()
+            {
+                Title = eventDto.Title,
+                Description = eventDto.Description
+            };
+            _context.Events.Add(newEvent);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvent", new { id = @event.Id }, @event);
+            return CreatedAtAction("GetEvent", new { id = newEvent.Id }, newEvent);
         }
 
         // DELETE: api/Event/5
