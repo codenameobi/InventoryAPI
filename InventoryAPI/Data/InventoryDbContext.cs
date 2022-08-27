@@ -30,7 +30,7 @@ namespace InventoryAPI.Data
         public InventoryDbContext CreateDbContext(string[] args)
         {
             // Get environment
-            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            //string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             // Build config
             IConfiguration config = new ConfigurationBuilder()

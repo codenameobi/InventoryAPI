@@ -12,55 +12,55 @@ namespace InventoryAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventController : ControllerBase
+    public class EquipmentController : ControllerBase
     {
         private readonly InventoryDbContext _context;
 
-        public EventController(InventoryDbContext context)
+        public EquipmentController(InventoryDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Event
+        // GET: api/Equipment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipments()
         {
-          if (_context.Events == null)
+          if (_context.Equipments == null)
           {
               return NotFound();
           }
-            return await _context.Events.ToListAsync();
+            return await _context.Equipments.ToListAsync();
         }
 
-        // GET: api/Event/5
+        // GET: api/Equipment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        public async Task<ActionResult<Equipment>> GetEquipment(int id)
         {
-          if (_context.Events == null)
+          if (_context.Equipments == null)
           {
               return NotFound();
           }
-            var @event = await _context.Events.FindAsync(id);
+            var equipment = await _context.Equipments.FindAsync(id);
 
-            if (@event == null)
+            if (equipment == null)
             {
                 return NotFound();
             }
 
-            return @event;
+            return equipment;
         }
 
-        // PUT: api/Event/5
+        // PUT: api/Equipment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event @event)
+        public async Task<IActionResult> PutEquipment(int id, Equipment equipment)
         {
-            if (id != @event.Id)
+            if (id != equipment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@event).State = EntityState.Modified;
+            _context.Entry(equipment).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace InventoryAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(id))
+                if (!EquipmentExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +81,44 @@ namespace InventoryAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Event
+        // POST: api/Equipment
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent(Event @event)
+        public async Task<ActionResult<Equipment>> PostEquipment(Equipment equipment)
         {
-          if (_context.Events == null)
+          if (_context.Equipments == null)
           {
-              return Problem("Entity set 'InventoryDbContext.Events'  is null.");
+              return Problem("Entity set 'InventoryDbContext.Equipments'  is null.");
           }
-            _context.Events.Add(@event);
+            _context.Equipments.Add(equipment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvent", new { id = @event.Id }, @event);
+            return CreatedAtAction("GetEquipment", new { id = equipment.Id }, equipment);
         }
 
-        // DELETE: api/Event/5
+        // DELETE: api/Equipment/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEvent(int id)
+        public async Task<IActionResult> DeleteEquipment(int id)
         {
-            if (_context.Events == null)
+            if (_context.Equipments == null)
             {
                 return NotFound();
             }
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
+            var equipment = await _context.Equipments.FindAsync(id);
+            if (equipment == null)
             {
                 return NotFound();
             }
 
-            _context.Events.Remove(@event);
+            _context.Equipments.Remove(equipment);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool EventExists(int id)
+        private bool EquipmentExists(int id)
         {
-            return (_context.Events?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Equipments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -12,55 +12,55 @@ namespace InventoryAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventController : ControllerBase
+    public class EnrollmentController : ControllerBase
     {
         private readonly InventoryDbContext _context;
 
-        public EventController(InventoryDbContext context)
+        public EnrollmentController(InventoryDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Event
+        // GET: api/Enrollment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<Enrollment>>> GetEnrollments()
         {
-          if (_context.Events == null)
+          if (_context.Enrollments == null)
           {
               return NotFound();
           }
-            return await _context.Events.ToListAsync();
+            return await _context.Enrollments.ToListAsync();
         }
 
-        // GET: api/Event/5
+        // GET: api/Enrollment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        public async Task<ActionResult<Enrollment>> GetEnrollment(int id)
         {
-          if (_context.Events == null)
+          if (_context.Enrollments == null)
           {
               return NotFound();
           }
-            var @event = await _context.Events.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
 
-            if (@event == null)
+            if (enrollment == null)
             {
                 return NotFound();
             }
 
-            return @event;
+            return enrollment;
         }
 
-        // PUT: api/Event/5
+        // PUT: api/Enrollment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event @event)
+        public async Task<IActionResult> PutEnrollment(int id, Enrollment enrollment)
         {
-            if (id != @event.Id)
+            if (id != enrollment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@event).State = EntityState.Modified;
+            _context.Entry(enrollment).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace InventoryAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(id))
+                if (!EnrollmentExists(id))
                 {
                     return NotFound();
                 }
@@ -81,44 +81,44 @@ namespace InventoryAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Event
+        // POST: api/Enrollment
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent(Event @event)
+        public async Task<ActionResult<Enrollment>> PostEnrollment(Enrollment enrollment)
         {
-          if (_context.Events == null)
+          if (_context.Enrollments == null)
           {
-              return Problem("Entity set 'InventoryDbContext.Events'  is null.");
+              return Problem("Entity set 'InventoryDbContext.Enrollments'  is null.");
           }
-            _context.Events.Add(@event);
+            _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEvent", new { id = @event.Id }, @event);
+            return CreatedAtAction("GetEnrollment", new { id = enrollment.Id }, enrollment);
         }
 
-        // DELETE: api/Event/5
+        // DELETE: api/Enrollment/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEvent(int id)
+        public async Task<IActionResult> DeleteEnrollment(int id)
         {
-            if (_context.Events == null)
+            if (_context.Enrollments == null)
             {
                 return NotFound();
             }
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
+            var enrollment = await _context.Enrollments.FindAsync(id);
+            if (enrollment == null)
             {
                 return NotFound();
             }
 
-            _context.Events.Remove(@event);
+            _context.Enrollments.Remove(enrollment);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool EventExists(int id)
+        private bool EnrollmentExists(int id)
         {
-            return (_context.Events?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Enrollments?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
