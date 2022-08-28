@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InventoryAPI.Data;
 using InventoryAPI.Models;
+using AutoMapper;
+using InventoryAPI.DTOs.Equipment;
+using InventoryAPI.DTOs.Event;
 
 namespace InventoryAPI.Controllers
 {
@@ -15,26 +18,30 @@ namespace InventoryAPI.Controllers
     public class EquipmentController : ControllerBase
     {
         private readonly InventoryDbContext _context;
+        private readonly IMapper _mapper;
 
-        public EquipmentController(InventoryDbContext context)
+        public EquipmentController(InventoryDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Equipment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Equipment>>> GetEquipments()
+        public async Task<ActionResult<IEnumerable<EquipmentDto>>> GetEquipments()
         {
           if (_context.Equipments == null)
           {
               return NotFound();
           }
-            return await _context.Equipments.ToListAsync();
+            var equipments = await _context.Equipments.ToListAsync();
+            var data = _mapper.Map<List<EquipmentDto>>(equipments);
+            return data;
         }
 
         // GET: api/Equipment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Equipment>> GetEquipment(int id)
+        public async Task<ActionResult<EquipmentDto>> GetEquipment(int id)
         {
           if (_context.Equipments == null)
           {
@@ -46,21 +53,23 @@ namespace InventoryAPI.Controllers
             {
                 return NotFound();
             }
+            var data = _mapper.Map<EquipmentDto>(equipment);
 
-            return equipment;
+            return data;
         }
 
         // PUT: api/Equipment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEquipment(int id, Equipment equipment)
+        public async Task<IActionResult> PutEquipment(int id, EquipmentDto equipmentDto)
         {
-            if (id != equipment.Id)
+            var foundModel = await _context.Equipments.FindAsync(id);
+
+            if (foundModel is null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(equipment).State = EntityState.Modified;
+            _mapper.Map(equipmentDto, foundModel);
 
             try
             {
@@ -84,12 +93,9 @@ namespace InventoryAPI.Controllers
         // POST: api/Equipment
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Equipment>> PostEquipment(Equipment equipment)
+        public async Task<ActionResult<Equipment>> PostEquipment(CreateEquipmentDto equipmentDto)
         {
-          if (_context.Equipments == null)
-          {
-              return Problem("Entity set 'InventoryDbContext.Equipments'  is null.");
-          }
+            var equipment = _mapper.Map<Equipment>(equipmentDto);
             _context.Equipments.Add(equipment);
             await _context.SaveChangesAsync();
 

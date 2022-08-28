@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InventoryAPI.Data;
 using InventoryAPI.Models;
+using AutoMapper;
+using InventoryAPI.DTOs.Enrollment;
+using InventoryAPI.DTOs.Equipment;
 
 namespace InventoryAPI.Controllers
 {
@@ -15,26 +18,30 @@ namespace InventoryAPI.Controllers
     public class EnrollmentController : ControllerBase
     {
         private readonly InventoryDbContext _context;
+        private readonly IMapper _mapper;
 
-        public EnrollmentController(InventoryDbContext context)
+        public EnrollmentController(InventoryDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Enrollment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Enrollment>>> GetEnrollments()
+        public async Task<ActionResult<IEnumerable<EnrollmentDto>>> GetEnrollments()
         {
           if (_context.Enrollments == null)
           {
               return NotFound();
           }
-            return await _context.Enrollments.ToListAsync();
+            var enrollments = await _context.Enrollments.ToListAsync();
+            var data = _mapper.Map<List<EnrollmentDto>>(enrollments);
+            return data;
         }
 
         // GET: api/Enrollment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Enrollment>> GetEnrollment(int id)
+        public async Task<ActionResult<EnrollmentDto>> GetEnrollment(int id)
         {
           if (_context.Enrollments == null)
           {
@@ -46,21 +53,23 @@ namespace InventoryAPI.Controllers
             {
                 return NotFound();
             }
+            var data = _mapper.Map<EnrollmentDto>(enrollment);
 
-            return enrollment;
+            return data;
         }
 
         // PUT: api/Enrollment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEnrollment(int id, Enrollment enrollment)
+        public async Task<IActionResult> PutEnrollment(int id, EnrollmentDto enrollmentDto)
         {
-            if (id != enrollment.Id)
+            var foundModel = await _context.Enrollments.FindAsync(id);
+
+            if (foundModel is null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(enrollment).State = EntityState.Modified;
+            _mapper.Map(enrollmentDto, foundModel);
 
             try
             {
@@ -84,12 +93,14 @@ namespace InventoryAPI.Controllers
         // POST: api/Enrollment
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Enrollment>> PostEnrollment(Enrollment enrollment)
+        public async Task<ActionResult<Enrollment>> PostEnrollment(EnrollmentDto enrollmentDto)
         {
           if (_context.Enrollments == null)
           {
               return Problem("Entity set 'InventoryDbContext.Enrollments'  is null.");
           }
+
+            var enrollment = _mapper.Map<Enrollment>(enrollmentDto);
             _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
 
