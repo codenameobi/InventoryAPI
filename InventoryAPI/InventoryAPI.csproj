@@ -44,6 +44,7 @@
     <None Remove="Configurations\" />
     <None Remove="DTOs\Equipment\" />
     <None Remove="DTOs\Enrollment\" />
+    <None Remove="Data\Contracts\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -54,5 +55,6 @@
     <Folder Include="Configurations\" />
     <Folder Include="DTOs\Equipment\" />
     <Folder Include="DTOs\Enrollment\" />
+    <Folder Include="Data\Contracts\" />
   </ItemGroup>
 </Project>
