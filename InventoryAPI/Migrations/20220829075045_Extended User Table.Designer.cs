@@ -4,6 +4,7 @@ using InventoryAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryAPI.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220829075045_Extended User Table")]
+    partial class ExtendedUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,44 +228,6 @@ namespace InventoryAPI.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a8113fe9-7cee-432c-bc30-fc91cbf56ff6",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "b8438697-26dc-4634-80be-0a1913d318df",
-                            Email = "admin@localhost.com",
-                            EmailConfirmed = true,
-                            FirstName = "Administrator",
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@LOCALHOST.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAECx+nv3XMIip0GbENxiz2MDD68SgdBllwEHOYRi/MpHvl2qEPG8+bcrE3kPyCYARjA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "4ce1c79d-9c81-47f9-9127-6d67ea4c67fc",
-                            TwoFactorEnabled = false,
-                            UserName = "Admin"
-                        },
-                        new
-                        {
-                            Id = "a001f060-5fe2-488b-a199-60cf373f761a",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e20c659-1c94-4d66-b17b-73ec53567555",
-                            Email = "user@localhost.com",
-                            EmailConfirmed = true,
-                            FirstName = "Obiora",
-                            LastName = "Nwude",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@LOCALHOST.COM",
-                            NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKSSivsYQmLH3WSfH7cY72pBDSt+M7ybZcXTGDGAHk3KWoBHcWpl204hI8yPockx0g==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "f89254e7-475d-46c7-bec7-59f7cc965175",
-                            TwoFactorEnabled = false,
-                            UserName = "user"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -295,15 +259,15 @@ namespace InventoryAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5e1bfb55-3421-474d-b06c-f5137f4e7072",
-                            ConcurrencyStamp = "05dd2ab1-a875-4b24-b470-c152653c1276",
+                            Id = "ccb7d2af-3b8e-409a-a3f6-be29352ac3ee",
+                            ConcurrencyStamp = "c2310b68-f0c1-41b6-8860-132bda6fb794",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "b8efb1bf-d355-4058-9d5e-3073b4a0b1f3",
-                            ConcurrencyStamp = "10371898-a5e2-47fb-b3c2-914c8d351d20",
+                            Id = "4091a765-fc39-43f2-bb8a-85d3d74ffb3a",
+                            ConcurrencyStamp = "98e8bcb2-d747-4243-8bf3-c434a4454b25",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -394,18 +358,6 @@ namespace InventoryAPI.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "a8113fe9-7cee-432c-bc30-fc91cbf56ff6",
-                            RoleId = "5e1bfb55-3421-474d-b06c-f5137f4e7072"
-                        },
-                        new
-                        {
-                            UserId = "a001f060-5fe2-488b-a199-60cf373f761a",
-                            RoleId = "b8efb1bf-d355-4058-9d5e-3073b4a0b1f3"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace InventoryAPI.Data
 {
-	public class InventoryDbContext : IdentityDbContext
+	public class InventoryDbContext : IdentityDbContext<User>
 	{
 		public InventoryDbContext(DbContextOptions<InventoryDbContext> options) : base(options)
 		{
@@ -17,6 +17,8 @@ namespace InventoryAPI.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new EventConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new UserRoleConfiguration());
         }
 

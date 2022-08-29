@@ -2,6 +2,8 @@
 using InventoryAPI.Data;
 using InventoryAPI.Data.Contracts;
 using InventoryAPI.Data.Repositories;
+using InventoryAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,11 @@ builder.Services.AddDbContext<InventoryDbContext>(options =>
 {
     options.UseSqlServer(conn);
 });
+
+//Add User Identity Service
+builder.Services.AddIdentityCore<User>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<InventoryDbContext>();
 
 // Add services to the container.
 
