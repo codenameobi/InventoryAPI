@@ -1,4 +1,6 @@
 ﻿using System;
+using InventoryAPI.DTOs.Equipment;
+
 namespace InventoryAPI.DTOs.Event
 {
 	public class EventDto
@@ -12,6 +14,11 @@ namespace InventoryAPI.DTOs.Event
     {
         public string Title { get; set; }
         public string Description { get; set; }
+    }
+
+    public class EventDetailsDto : CreateEventDto
+    {
+        public List<EquipmentDto> Equipments { get; set; } = new List<EquipmentDto>();
     }
 }
 

@@ -13,8 +13,10 @@ namespace InventoryAPI.Configurations
 		{
 			CreateMap<Event, EventDto>().ReverseMap();
             CreateMap<Event, CreateEventDto>().ReverseMap();
+            CreateMap<Event, EventDetailsDto>()
+				.ForMember(q => q.Equipments, x => x.MapFrom(model => model.Enrollments.Select(stu => stu.Equipment)));
 
-			CreateMap<Equipment, CreateEquipmentDto>().ReverseMap();
+            CreateMap<Equipment, CreateEquipmentDto>().ReverseMap();
 			CreateMap<Equipment, EquipmentDto>().ReverseMap();
 
 			CreateMap<Enrollment, CreateEnrollmentDto>().ReverseMap();

@@ -7,9 +7,6 @@ namespace InventoryAPI.DTOs.Enrollment
     {
         public int EquipmentId { get; set; }
         public int EventId { get; set; }
-
-        public virtual EventDto Event { get; set; }
-        public virtual EquipmentDto Equipment { get; set; }
     }
 }
 

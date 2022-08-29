@@ -9,6 +9,8 @@ using InventoryAPI.Data;
 using InventoryAPI.Models;
 using InventoryAPI.DTOs.Event;
 using AutoMapper;
+using InventoryAPI.Data.Contracts;
+using InventoryAPI.DTOs.Enrollment;
 
 namespace InventoryAPI.Controllers
 {
@@ -16,12 +18,12 @@ namespace InventoryAPI.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
-        private readonly InventoryDbContext _context;
+        private readonly IEventRepository _repo;
         private readonly IMapper _mapper;
 
-        public EventController(InventoryDbContext context, IMapper mapper)
+        public EventController(IEventRepository repo, IMapper mapper)
         {
-            _context = context;
+            this._repo = repo;
             _mapper = mapper;
         }
 
@@ -29,31 +31,31 @@ namespace InventoryAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents()
         {
-          if (_context.Events == null)
-          {
-              return NotFound();
-          }
-            var events = await _context.Events.ToListAsync();
+            var events = await _repo.GetAllAsync();
             var data = _mapper.Map<List<EventDto>>(events);
             return data;
         }
 
         // GET: api/Event/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEvent(int id)
         {
-          if (_context.Events == null)
-          {
-              return NotFound();
-          }
-            var @event = await _context.Events.FindAsync(id);
+            return await _repo.GetAsync(id)
+                is Event model
+                ? Ok(_mapper.Map<EventDto>(model))
+                : NotFound();
+        }
 
-            if (@event == null)
-            {
-                return NotFound();
-            }
+        // GET: api/Event/GetEvent/5
 
-            return @event;
+        [HttpGet("GetEvent/{id}")]
+        public async Task<ActionResult<Event>> GetEventDetails(int id)
+        {
+            return await _repo.GetEventDetails(id)
+                is Event model
+                ? Ok(_mapper.Map<EventDetailsDto>(model))
+                : NotFound();
         }
 
         // PUT: api/Event/5
@@ -61,29 +63,15 @@ namespace InventoryAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEvent(int id, EventDto @event)
         {
-            if (id != @event.Id)
+
+            var foundModel = await _repo.GetAsync(id);
+            if (foundModel is null)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@event).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EventExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            var data = _mapper.Map(@event, foundModel);
+            await _repo.UpdateAsync(data);
             return NoContent();
         }
 
@@ -92,13 +80,8 @@ namespace InventoryAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent(CreateEventDto eventDto)
         {
-          if (_context.Events == null)
-          {
-              return Problem("Entity set 'InventoryDbContext.Events'  is null.");
-          }
             var newEvent = _mapper.Map<Event>(eventDto);
-            _context.Events.Add(newEvent);
-            await _context.SaveChangesAsync();
+            _repo.AddAsync(newEvent);
 
             return CreatedAtAction("GetEvent", new { id = newEvent.Id }, newEvent);
         }
@@ -107,25 +90,8 @@ namespace InventoryAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
-            if (_context.Events == null)
-            {
-                return NotFound();
-            }
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return NotFound();
-            }
-
-            _context.Events.Remove(@event);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _repo.DeleteAsync(id) ? NoContent() : NotFound();
         }
 
-        private bool EventExists(int id)
-        {
-            return (_context.Events?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
