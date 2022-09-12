@@ -48,6 +48,7 @@
     <None Remove="DTOs\Enrollment\" />
     <None Remove="Data\Contracts\" />
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -59,5 +60,6 @@
     <Folder Include="DTOs\Equipment\" />
     <Folder Include="DTOs\Enrollment\" />
     <Folder Include="Data\Contracts\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>
